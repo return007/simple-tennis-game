@@ -11,4 +11,4 @@ $ javac Game.java
 
 $ java Game
 
-4. Enjoy!!!
+      Enjoy!!!
