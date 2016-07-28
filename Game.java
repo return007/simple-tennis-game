@@ -6,6 +6,7 @@ import java.awt.event.KeyListener;
 
 import javax.swing.JPanel;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 public class Game extends JPanel{
 	
@@ -13,6 +14,7 @@ public class Game extends JPanel{
 	int mx,my;
 	int racquetX,racquetY;
 	int speed;
+	int score;
 	
 	Game(int x, int y){
 		this.x = x;		//These are the inital positions of the ball that we see
@@ -32,6 +34,7 @@ public class Game extends JPanel{
 		});
 		setFocusable(true);
 		speed = 0;
+		score = 0;
 	}
 	
 	public void moveBall(){
@@ -56,7 +59,7 @@ public class Game extends JPanel{
 		}
 		if(my > 0){
 			//Movement along SE or SW direction
-			if(y+my < getHeight()-30){
+			if(y+my <= getHeight()-30){
 				y += my;
 			}
 			else{
@@ -99,6 +102,13 @@ public class Game extends JPanel{
 				racquetX += speed;
 			}
 		}
+		if(y+30 == racquetY){
+			if(x+20 >= racquetX && x <= racquetX+60){
+				//Now the ball has touched the racquet, and hence must rebound from here
+				my = -my;
+				score++;
+			}
+		}
 	}
 	
 	public void paint(Graphics g){
@@ -110,6 +120,18 @@ public class Game extends JPanel{
 		obj.fillRect(racquetX,racquetY,60,15);
 	}
 	
+	boolean isOver(){
+		boolean status = false;
+		if(y+30 == getHeight())
+			status = true;
+		return status;
+	}
+	
+	void finish(){
+		JOptionPane.showMessageDialog(this,"Game Over!!!\nScore : "+score, "Game Over", JOptionPane.YES_NO_OPTION);
+		System.exit(ABORT);
+	}
+	
 	public static void main(String[] args) {
 		JFrame frame = new JFrame("Mini Game");
 		Game game = new Game((int)(Math.random()*1000)%(300-40), 0);
@@ -117,17 +139,22 @@ public class Game extends JPanel{
 		frame.setSize(300, 400);
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);		//so that the program exits/terminates on closing
-		game.racquetY = game.getHeight()+5;
+		game.racquetY = 400-15;
 		while(true){
 			game.moveBall();
 			game.moveRacquet();
 			game.repaint();
+			if(game.isOver()){
+				break;
+			}
 			try{
-				Thread.sleep(6);
+				Thread.sleep(5);
 			}
 			catch(InterruptedException ie){
 				System.out.println(ie);
 			}
 		}
+		game.finish();
+		System.out.println("Game Over!!!");
 	}
 }
