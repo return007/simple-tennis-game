@@ -8,6 +8,7 @@ Steps to play:
 3. On the terminal, type the following : 
 	
 $ javac Game.java
+
 $ java Game
 
 4. Enjoy!!!
